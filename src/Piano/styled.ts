@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const playingColor = "red";
+
 const PianoGrid = styled.div`
   display: flex;
   width: 70vw;
@@ -9,26 +11,28 @@ const PianoGrid = styled.div`
   box-shadow: 7px 9px 19px #505050;
 `;
 
-const PianoWhiteStyled = styled.div`
+const PianoKeyStyled = styled.div`
   background: white;
   padding: 0 10px;
   height: 300px;
   border-right: 1px solid black;
+  ${(props) =>
+    props.blackKey &&
+    `
+    color: white;
+    background: black;
+  `}
+
+  ${(props) =>
+    props.playing &&
+    `
+    background: ${playingColor};
+    border-color: ${playingColor};
+  `}
 
   &:last-of-type {
     border-right: none;
   }
 `;
-const PianoBlackStyled = styled.div`
-  color: white;
-  background: black;
-  padding: 0 5px;
-  height: 300px;
-  border-right: 1px solid black;
 
-  &:last-of-type {
-    border-right: none;
-  }
-`;
-
-export { PianoBlackStyled, PianoWhiteStyled, PianoGrid };
+export { PianoKeyStyled, PianoGrid };
