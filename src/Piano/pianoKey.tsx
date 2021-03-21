@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Tone from "tone";
 import { PianoKeyStyled } from "./styled";
 
-const PianoKey = ({ pianoSynth, note, notesPlaying, setNotesPlaying }) => {
+interface Props {
+  note: string;
+  setNotesPlaying: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const PianoKey = ({ note, setNotesPlaying }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    const seed = Math.floor(Math.random() * 6);
-    const loop = setInterval(() => {
-      if (isPlaying) {
-        pianoSynth.triggerAttackRelease(note, seed);
-      }
-    }, 5000);
-    return () => {
-      clearInterval(loop);
-    };
-  });
+  const handleClick = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+      setNotesPlaying((c) => [...c, note]);
+    } else {
+      setIsPlaying(false);
+      setNotesPlaying((c) => c.filter((playingNote) => playingNote !== note));
+    }
+  };
 
   return (
     <PianoKeyStyled
       note={note}
       onClick={() => {
         Tone.start();
-        setIsPlaying(!isPlaying);
+        handleClick();
       }}
       blackKey={note.includes("b")}
       playing={isPlaying}
