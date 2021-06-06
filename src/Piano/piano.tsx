@@ -1,66 +1,25 @@
 import React, { useEffect, useState } from "react";
 import * as Tone from "tone";
-import { PianoGrid } from "./styled";
 import Notes from "../notes";
-import PianoKey from "./pianoKey";
+import { PianoGrid } from "./Piano.style";
+import PianoKey from "./PianoKey";
+
+const synth = new Tone.PolySynth({
+  maxPolyphony: 7,
+  voice: Tone.Synth,
+}).toDestination();
 
 const Piano = () => {
   const [notesPlaying, setNotesPlaying] = useState<string[]>([]);
-  const reverb = new Tone.Reverb(10).toDestination();
-  const pianoSynth = new Tone.AMSynth().chain(reverb).toDestination();
-  pianoSynth.set({
-    harmonicity: 2.5,
-    oscillator: {
-      phase: 0,
-      type: "fmsine",
-    },
-    envelope: {
-      attack: 0.5,
-      attackCurve: "exponential",
-      release: 0.3,
-      releaseCurve: "exponential",
-      sustain: 0.2,
-    },
-    modulation: {
-      partialCount: 0,
-      phase: 0,
-      type: "square",
-    },
-    modulationEnvelope: {
-      attack: 0.1,
-      attackCurve: "linear",
-      decay: 0.01,
-      decayCurve: "exponential",
-      release: 0.5,
-      releaseCurve: "exponential",
-      sustain: 1,
-    },
-  });
-
-  Tone.Transport.start(0);
 
   useEffect(() => {
-    const getNotes = () => {
-      const notes = notesPlaying.map((note, i) => {
-        return { time: i + 0.5, note, velocity: 0.4 + i * 0.1 };
-      });
-      return notes;
-    };
+    synth.releaseAll();
+    synth.triggerAttack(notesPlaying);
+  }, [notesPlaying, setNotesPlaying]);
 
-    const part = new Tone.Part((time, value) => {
-      pianoSynth.triggerAttackRelease(
-        value.note,
-        value.time,
-        time,
-        value.velocity
-      );
-    }, getNotes()).start();
-    part.loop = true;
-
-    return () => {
-      part.dispose();
-    };
-  }, [notesPlaying, pianoSynth]);
+  useEffect(() => {
+    Tone.start();
+  }, []);
 
   return (
     <PianoGrid>

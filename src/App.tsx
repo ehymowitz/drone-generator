@@ -1,6 +1,6 @@
 import React from "react";
 import GlobalStyle from "./global-style";
-import Piano from "./Piano/piano";
+import Piano from "./piano/Piano";
 
 function App() {
   return (

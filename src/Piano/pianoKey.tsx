@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import * as Tone from "tone";
-import { PianoKeyStyled } from "./styled";
+import { PianoKeyStyled } from "./Piano.style";
 
 interface Props {
   note: string;
@@ -20,18 +19,17 @@ const PianoKey = ({ note, setNotesPlaying }: Props) => {
     }
   };
 
+  console.log(note);
+
   return (
     <PianoKeyStyled
       note={note}
       onClick={() => {
-        Tone.start();
         handleClick();
       }}
       blackKey={note.includes("b")}
       playing={isPlaying}
-    >
-      {note}
-    </PianoKeyStyled>
+    />
   );
 };
 
